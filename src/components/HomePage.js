@@ -5,6 +5,7 @@ import axios from "axios"
 import uploadImageOnCloudinary from '../utils/cloudinary';
 import { SERVER_URL } from '../utils/constants';
 import { ToastContainer, toast } from 'react-toastify';
+import {Triangle} from "react-loader-spinner"
 
 const HomePage = () => {
   const [imageUrl, setImageUrl] = useState("");
@@ -41,6 +42,7 @@ const HomePage = () => {
   }
 
   const addDataHandler = async (event) => {
+    setIsLoading(true);
     try{
       
         if(!imageUrl) return;
@@ -60,6 +62,9 @@ const HomePage = () => {
     }
     catch (err){
       console.log(err);
+    }
+    finally{
+      setIsLoading(false);
     }
       
       
@@ -107,12 +112,25 @@ const HomePage = () => {
               onChange={(e) => imageUploadHandler(e.target.files[0])}
               /> <br></br>
             <div className='flex justify-center flex-col items-center'>
-              <button 
+              {
+                isLoading ? 
+                <div className='px-8'>
+                  <Triangle
+                    height="65"
+                    width="65"
+                    color="rgb(85,185,185)"
+                    ariaLabel="triangle-loading"
+                    visible={true}
+                  /> 
+                </div>
+                :
+                <button 
                   
-                  className={`border-2 shadow-xl border-[rgb(85,185,185)] rounded px-2 p-[4px] mt-4 text-center text-[rgb(51,51,51)] cursor-pointer hover:bg-[rgb(195,195,195)] hover:border-[rgb(205,205,205)] ${isLoading ? 'opacity-70' : ''}`}
-                  onClick={addDataHandler}
-              >    Add Data
-              </button>
+                    className={`border-2 shadow-xl border-[rgb(85,185,185)] rounded px-2 p-[4px] mt-4 text-center text-[rgb(51,51,51)] cursor-pointer hover:bg-[rgb(195,195,195)] hover:border-[rgb(205,205,205)] ${isLoading ? 'opacity-70' : ''}`}
+                    onClick={addDataHandler}
+                >    Add Data
+                </button>
+              }
             </div>
           </form>
           

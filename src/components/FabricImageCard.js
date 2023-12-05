@@ -8,16 +8,19 @@ import { SERVER_URL } from '../utils/constants';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useGetAllData from '../utils/useGetAllData';
+import { useEffect, useState } from 'react';
+import { Triangle } from 'react-loader-spinner';
 
 const FabricImageCard = (props) => {
   const {data, showForm} = props;
+  const [isLoading, setIsLoading] = useState(false);
   // console.log(data);
     const fabricData = useSelector((store) => store.fabric.fabricData);
   const {fabricName, fabricImage, _id} = data;
   const dispatch = useDispatch();
 
   const handleOnClick = () => {
-      dispatch(setSelectedFabric(data?.data));
+      dispatch(setSelectedFabric(data));
   }
 
   const editHandler = async () => {
@@ -27,6 +30,8 @@ const FabricImageCard = (props) => {
   }
 
   const deleteHandler = async () => {
+    setIsLoading(true);
+    console.log(isLoading);
     try{
         const response = await axios.delete(`${SERVER_URL}/api/v1/details/deleteData/${_id}`);
         console.log(response);
@@ -42,23 +47,39 @@ const FabricImageCard = (props) => {
         toast.error("Unable to delete data!", {autoClose: 4000});
         console.log(err);
       }
+      finally{
+        setIsLoading(false);
+      }
   }
+
   return (
     <div>
         <ToastContainer />
-        <div>
-          
-        </div>
+        {
+              isLoading && 
+              <div className='absolute px-8 py-8'>
+              <Triangle
+                    height="120"
+                    width="120"
+                    color="rgb(85,185,185)"
+                    ariaLabel="triangle-loading"
+                    visible={true}
+                  /> 
+              </div>
+            }
         <div 
             onClick={() => handleOnClick()}
-            className='shadow-lg border-white bg-white rounded m-4 mt-8 text-center px-[4px] transition-all duration-450 hover:scale-110 cursor-pointer'
+            className={`shadow-lg border-white bg-white rounded m-4 mt-8 text-center px-[4px] transition-all duration-450 hover:scale-110 cursor-pointer`}
         >
-            <img 
-                src={fabricImage} 
-                alt="fabric-img"
-                className='w-36 h-36 rounded'
+            <div className={``}>
+              <img 
+                  src={fabricImage} 
+                  alt="fabric-img"
+                  className='w-36 h-36 rounded'
 
-            />
+              />
+            </div>
+            
             <div className='flex justify-between mt-2'>
                 <FaEdit 
                     onClick={editHandler}
@@ -72,6 +93,7 @@ const FabricImageCard = (props) => {
                     onClick={deleteHandler}
                     size={22} 
                     color="rgb(150,0,0)"
+                    disabled={isLoading}
                 />
             </div>
         </div>

@@ -9,6 +9,8 @@ import axios from 'axios';
 import { SERVER_URL } from '../utils/constants';
 import { ToastContainer, toast } from 'react-toastify';
 import PopupForm from './PopupForm';
+import TableShimmer from './shimmer/ShimmerTable';
+import ShimmerTable from './shimmer/ShimmerTable';
 const ViewFabricDetail = () => {
   useGetAllData();
 
@@ -166,9 +168,11 @@ const ViewFabricDetail = () => {
                 <th className='px-4 border'>Modify Details</th>
               </tr>
             </thead>
-            <tbody className='border'>
-              { 
-                  filteredData?.map((item) => (
+            {
+              !filteredData ? 
+              <ShimmerTable />
+              :
+              filteredData?.map((item) => (
                       <tr  key={item.fabricName}  className='text-center items-center border'>
                         <td className='border py-2'>{item.fabricCode}</td>
                         <td className='border'>{item.fabricName}</td>
@@ -191,8 +195,12 @@ const ViewFabricDetail = () => {
                         </td>
                     </tr>
                 ))
+            }
+            {/* <tbody className='border'>
+              { 
+                  
               }
-            </tbody>
+            </tbody> */}
           </table>
           </div>
         </div>

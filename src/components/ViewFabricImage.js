@@ -4,12 +4,11 @@ import FabricImageCard from './FabricImageCard';
 import Header from './Header';
 import useGetAllData from '../utils/useGetAllData';
 import { setDataToUpdate, setSelectedFabric } from './store/fabricSlice';
-import axios from 'axios';
-import { SERVER_URL } from '../utils/constants';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdDelete } from "react-icons/md";
 import PopupForm from './PopupForm';
+import ViewImageShimmer from './shimmer/ViewImageShimmer';
 
 const ViewFabricImage = () => {
 
@@ -21,45 +20,22 @@ const ViewFabricImage = () => {
     const [popupPosition, setPopupPosition] = useState(0);
 
     useEffect(() => {
-      // console.log(popupPosition);
     }, [popupPosition])
 
     const removePopupHandler = () => {
         dispatch(setSelectedFabric(null));
         toast.success("Popup removed!", {autoClose: 1000});
     }
-    const handleDeleteData = async () => {
-        const {_id} = selectedFabric;
-        try{
-          const response = await axios.delete(`${SERVER_URL}/api/v1/details/deleteData/${_id}`);
-          console.log(response);
-          dispatch(setSelectedFabric(null));
-          toast.warn("Data deleted!", {theme: 'colored'});
-        }
-        catch(err){
-          console.log(err);
-        } 
-    }
-
-    const editHandler = (event, dataToUpdate) => {
-      const { clientY } = event;
-      const topOfViewport = window.scrollY;
-      console.log(clientY, topOfViewport);
-      // Set the position of the popup relative to the clicked entry
-      setPopupPosition(topOfViewport);
-    
-      // Show the popup
-      setShowPopup(true);
-      // console.log("Popup Position: ", popupPosition, clientY); // This may not reflect the updated state immediately
-    
-      dispatch(setDataToUpdate(dataToUpdate));
-    };
+   
 
     const handlePopupClose = () => {
       setShowPopup(false);
       dispatch(setDataToUpdate(null));
     }
-  return (
+  return !fabricData ? <div>
+    <Header></Header>
+    <ViewImageShimmer />
+  </div> : (
     <div>
         <div>
             <Header />

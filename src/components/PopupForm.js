@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaWindowClose } from "react-icons/fa";
 import { setFabricData } from './store/fabricSlice';
+import { Triangle } from 'react-loader-spinner';
 
 const PopupForm = ({closeForm}) => {
   // console.log("Popup form");
@@ -51,7 +52,8 @@ const PopupForm = ({closeForm}) => {
     fabricQuantityRef.current.value = "";             
     fabricCodeRef.current.value = "";
   }
-  const editHandler = async () => {
+  const updateHandler = async () => {
+    setIsLoading(true);
     try{
       const updatedData = await axios.put(`${SERVER_URL}/api/v1/details/updateData/${dataToUpdate._id}`,
             {
@@ -80,6 +82,9 @@ const PopupForm = ({closeForm}) => {
     catch(err){
       toast.error("Unbale to update data!", {theme: 'colored', autoClose: 3000});
     }
+    finally{
+      setIsLoading(false);
+    }
   }
   
   
@@ -91,7 +96,7 @@ const PopupForm = ({closeForm}) => {
       fabricQuantityRef.current.value = dataToUpdate.fabricQuantity;
 
     // }
-  }, [fabricData]);
+  }, []);
   return (
     <div>
         <ToastContainer />
@@ -140,12 +145,25 @@ const PopupForm = ({closeForm}) => {
               /> <br></br>
               <p className='text-red-600 text-sm -mt-2'>* Modify the fields you want to update </p>
             <div className='flex justify-center flex-col items-center'>
-              <button 
+            {
+                isLoading ? 
+                <div className='px-8'>
+                  <Triangle
+                    height="65"
+                    width="65"
+                    color="rgb(85,185,185)"
+                    ariaLabel="triangle-loading"
+                    visible={true}
+                  /> 
+                </div>
+                :
+                <button 
                   
-                  className={`border-2 shadow-xl border-[rgb(85,185,185)] rounded px-2 p-[4px] mt-4 text-center text-[rgb(51,51,51)] cursor-pointer hover:bg-[rgb(195,195,195)] hover:border-[rgb(205,205,205)] ${isLoading ? 'opacity-70' : ''}`}
-                  onClick={editHandler}
-              >    Update Data
-              </button>
+                    className={`border-2 shadow-xl border-[rgb(85,185,185)] rounded px-2 p-[4px] mt-4 text-center text-[rgb(51,51,51)] cursor-pointer hover:bg-[rgb(195,195,195)] hover:border-[rgb(205,205,205)] ${isLoading ? 'opacity-70' : ''}`}
+                    onClick={updateHandler}
+                >    Update Data
+                </button>
+              }
             </div>
           </form>
           
