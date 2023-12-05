@@ -6,11 +6,13 @@ const fabricSlice = createSlice({
             fabricData: null,
             filteredData: null,
             isUpdated: false,
-            selectedFabric: null
+            selectedFabric: null,
+            dataToUpdate: null,
         },
         reducers: {
             setFabricData: (state, action) => {
                 state.fabricData = action.payload;
+                state.filteredData = action.payload;
             },
             setFilteredData: (state, action) => {
                 state.filteredData = action.payload;
@@ -20,9 +22,12 @@ const fabricSlice = createSlice({
             },
             setSelectedFabric: (state, action) => {
                 state.selectedFabric = action.payload;
+            },
+            setDataToUpdate: (state, action) => {
+                state.dataToUpdate = action.payload;
             }
         }
     });
 
-export const {setFabricData, setFilteredData, setIsUpdated, setSelectedFabric} = fabricSlice.actions;
+export const {setFabricData, setFilteredData, setIsUpdated, setSelectedFabric, setDataToUpdate} = fabricSlice.actions;
 export default fabricSlice.reducer;

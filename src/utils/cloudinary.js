@@ -2,7 +2,6 @@ import { CLOUDINARY_URL, CLOUD_NAME, UPLOAD_PRESET } from "./constants";
 
 const uploadImageOnCloudinary = async (image) => {
     const apiUrl = CLOUDINARY_URL;
-        console.log(apiUrl);
         if (image.type === 'image/jpeg' || image.type === 'image/png') {
           const data = new FormData();
           data.append('file', image);
